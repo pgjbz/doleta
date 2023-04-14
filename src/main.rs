@@ -1,20 +1,42 @@
+use std::{env::args, process};
+
 use scraper::{node::Text, Html, Selector};
 
 const BC_DOLLAR_UR: &str = "https://ptax.bcb.gov.br/ptax_internet/consultarUltimaCotacaoDolar.do";
 
 fn main() {
-    match get_dollar_quotation_page() {
+    let mut args = args();
+    let executable_name = args.next().unwrap();
+    let value = if let Some(argument_value) = args.next() {
+        if let Ok(value) = argument_value.parse::<f64>() {
+            value
+        } else {
+            print_usage(&executable_name);
+            process::exit(1);
+        }
+    } else {
+        1f64
+    };
+    let dollar_value: f64 = match get_dollar_quotation_page() {
         Ok(page) => {
             let dollar_value_text = get_dollar_value(&page);
-            let dollar_value: f64 = dollar_value_text
+            dollar_value_text
                 .to_string()
                 .replace(',', ".")
                 .parse()
-                .unwrap();
-            println!("dollar price:  R$ {:.1$}", dollar_value, 2);
+                .unwrap()
         }
-        Err(error) => eprintln!("{error}"),
-    }
+        Err(error) => {
+            eprintln!("{error}");
+            process::exit(1);
+        }
+    };
+    println!("R$ {:.1$}", dollar_value * value, 2);
+}
+
+fn print_usage(executable_name: &str) {
+    eprintln!("modo de uso:
+    {executable_name} <valor numerico> - calcula o valor do dolar em relação a X reais, a isenção do valor é considerao 1 dolar para X reais");
 }
 
 fn get_dollar_value(html: &str) -> Text {
