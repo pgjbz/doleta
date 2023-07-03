@@ -8,7 +8,7 @@ fn main() {
     let mut args = args();
     let executable_name = args.next().unwrap();
     let value = if let Some(argument_value) = args.next() {
-        if let Ok(value) = argument_value.parse::<f64>() {
+        if let Ok(value) = argument_value.replace(',', ".").parse::<f64>() {
             value
         } else {
             print_usage(&executable_name);
