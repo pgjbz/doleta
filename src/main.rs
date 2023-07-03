@@ -22,7 +22,7 @@ fn main() {
             let dollar_value_text = get_dollar_value(&page);
             dollar_value_text
                 .to_string()
-                .replace(',', ".")
+                .replace(',', '.')
                 .parse()
                 .unwrap()
         }
@@ -36,7 +36,7 @@ fn main() {
 
 fn print_usage(executable_name: &str) {
     eprintln!("modo de uso:
-    {executable_name} <valor numerico> - calcula o valor do dolar em relação a X reais, a isenção do valor é considerao 1 dolar para X reais");
+    {executable_name} <valor numerico> - calcula o valor do dolar para reais");
 }
 
 fn get_dollar_value(html: &str) -> Text {
