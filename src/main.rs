@@ -22,7 +22,7 @@ fn main() {
             let dollar_value_text = get_dollar_value(&page);
             dollar_value_text
                 .to_string()
-                .replace(',', '.')
+                .replace(",", ".")
                 .parse()
                 .unwrap()
         }
